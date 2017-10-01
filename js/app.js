@@ -30,41 +30,32 @@
       return array;
   }
 
-  function resetDeck() {
-    // First erase deck by removing all children cards
-    const deck = document.querySelector('.deck');
-    // while (deck.firstChild) {
-    //   deck.removeChild(deck.firstChild);
-    // }
+  function resetDeck(initial) {
 
     resetMoves();
     resetStars();
     shuffle(cards);
 
-    // Add cards back into deck
-
+    // Reset classes on all cards and assign new ones reflecting
+    // shuffled deck
     const cardLiAll = document.querySelectorAll('.deck li');
     let cardCount = 0;
     for (let cardLi of cardLiAll){
       cardLi.className = "";
       cardLi.classList.add('card');
       let cardI = cardLi.firstElementChild;
-      console.log(cardI);
       cardI.className = "";
       cardI.classList.add('fa',`fa-${cards[cardCount]}`)
-      cardLi.addEventListener('click', clickCard, false);
+      // Only add EventListeners on initial reset
+      if (initial) cardLi.addEventListener('click', clickCard, false);
       cardCount++;
+
     }
-
-
-
-      // Add event listener to each card
-
-
+    console.log(initial)
   }
 
-
-  resetDeck(); // TEMP
+  // Initial reset
+  resetDeck(true);
 
   // li card classes:
   //   match = flip card;
@@ -89,7 +80,9 @@
 
    // Add event listener to restart button
   const restart = document.querySelector('.restart');
-  restart.addEventListener('click', resetDeck,false);
+  restart.addEventListener('click', function () {
+    resetDeck(false);
+  },false);
 
   function moveIncrement() {
     const movesElement = document.querySelector('.moves');
