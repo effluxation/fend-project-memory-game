@@ -7,8 +7,10 @@ module.exports = function (grunt) {
         force: true,
         reporter: require('jshint-stylish'),
         globals: {
-          jQuery: true
-        }
+          jQuery: false
+        },
+        esversion: 6,
+        forin: true
       },
       all: ['js/app.js']
     },
