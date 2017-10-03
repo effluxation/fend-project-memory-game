@@ -111,23 +111,19 @@
         // If cards Match
         if (alreadyOpenCardIcon === cardIcon) {
           matchedCards(card);
-          // Check for winning condition
-          if (matched === 8) victory();
         // Cards don't match
         } else {
           // Lock deck for 1 second and show both cards
           lock = true;
 
           // Launch mismatch animation
-          alreadyOpenCard[0].classList.add('mismatch');
-          card.classList.add('mismatch');
+          misMatchedCards(card);
 
           //Hide both cards in 1.2s
-          setTimeout( (function () {
+          setTimeout(function () {
             hideCards(card);
-            alreadyOpenCard.pop();
             lock = false;
-          }).bind(this), 1200);
+          }, 1200);
 
         }
       // No already open card, leave current card open
@@ -137,7 +133,6 @@
     }
 
     function matchedCards(card) {
-
       card.classList.remove('open');
       alreadyOpenCard[0].classList.remove('open');
       card.classList.add('match');
@@ -149,13 +144,24 @@
       matched++;
     }
 
+    function misMatchedCards(card) {
+      // Rotate icon by 180deg to compensate for rotation during open animation
+      card.firstElementChild.classList.add('rotated');
+      alreadyOpenCard[0].firstElementChild.classList.add('rotated');
+      alreadyOpenCard[0].classList.add('mismatch');
+      card.classList.add('mismatch');
+    }
+
     function hideCards(card) {
-      card.classList.remove('show');
-      card.classList.remove('open');
-      card.classList.remove('mismatch');
-      alreadyOpenCard[0].classList.remove('show');
-      alreadyOpenCard[0].classList.remove('open');
-      alreadyOpenCard[0].classList.remove('mismatch');
+      // Start hide animation
+      card.classList.add('close');
+      alreadyOpenCard[0].classList.add('close');
+      setTimeout(function () {
+        // Clear all classes from card
+        card.classList.remove('show','open','mismatch','close');
+        alreadyOpenCard[0].classList.remove('show','open','mismatch','close');
+        alreadyOpenCard.pop();
+      }, 200);
     }
   }
 
@@ -164,9 +170,9 @@
     movesElement.textContent = ++movesNumber;
 
     //adjust star rating
-    if(movesNumber === 10) removeStar();
-    if(movesNumber === 14) removeStar();
-    if(movesNumber === 18) removeStar();
+    if(movesNumber === 11) removeStar();
+    if(movesNumber === 15) removeStar();
+    if(movesNumber === 20) removeStar();
   }
 
   function resetMoves() {
@@ -195,7 +201,6 @@
 
   function victory() {
     let modal = document.querySelector('.modal');
-    resetDeck(false);
+    //resetDeck(false);
   }
-
 })();

@@ -65,25 +65,24 @@ h1 {
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 
-
 }
 
-.deck .card.open {
+.deck .open {
     cursor: default;
 
     /*Animation Properties*/
     backface-visibility: visible !important;
-    animation-name: flipInY;
-    animation-duration: .2s;
+    animation-name: flipInYopen;
+    animation-duration: 0.2s;
     animation-fill-mode: both;
     animation-timing-function: ease-in;
 }
 
-.deck .card.show {
+.deck .show {
     font-size: 33px;
 }
 
-.deck .card.match {
+.deck .match {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
@@ -95,7 +94,7 @@ h1 {
     animation-name: pulse;
 }
 
-.deck .card.mismatch {
+.deck .mismatch {
     background: #E82551;
 
     /*Animation Properties*/
@@ -104,8 +103,15 @@ h1 {
     animation-fill-mode: both;
     animation-timing-function: ease-in;
     animation-duration: 0.75s;
+}
 
-
+.deck .close {
+    /*Animation Properties*/
+    backface-visibility: visible !important;
+    animation-name: flipInYclose;
+    animation-duration: 0.2s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in;
 }
 
 .deck .card .rotated {
@@ -144,10 +150,11 @@ h1 {
  * generated with https://coveloping.com/tools/css-animation-generator
  */
 
-@keyframes flipInY {
+@keyframes flipInYopen {
     0% {
         transform: perspective(400px) rotateY(0deg);
         background: #2e3d49;
+        color: #2e3d49;
     }
     50% {
         background: #2e3d49;
@@ -156,6 +163,23 @@ h1 {
     100% {
         transform: perspective(400px) rotateY(180deg);
         background: #02b3e4;
+        color: white;
+    }
+}
+
+@keyframes flipInYclose {
+    0% {
+        transform: perspective(400px) rotateY(0deg);
+        background: #E82551;
+    }
+    50% {
+        background: #E82551;
+
+    }
+    100% {
+        transform: perspective(400px) rotateY(180deg);
+        background: #2e3d49;
+        color: #2e3d49;
     }
 }
 
