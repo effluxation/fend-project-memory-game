@@ -39,7 +39,7 @@
     resetMoves();
     resetStars();
     shuffle(cards);
-
+    //
     // Reset classes on all cards and assign new ones reflecting
     // shuffled deck
     const cardLiAll = document.querySelectorAll('.deck li');
@@ -56,7 +56,7 @@
         cardLi.addEventListener('click', clickCard, false);
         const restartButton = document.querySelector('.restart');
         restartButton.addEventListener('click', function () {
-          // Subsequent resents will not add event listeners
+          // Subsequent resets will not add event listeners
           resetDeck(false);
         },false);
       }
@@ -66,11 +66,6 @@
 
   // Initial reset
   resetDeck(true);
-
-  // li card classes:
-  //   match = flip card;
-  //   open =
-  //   show =
 
   /*
    * set up the event listener for a card. If a card is clicked:
@@ -82,20 +77,26 @@
    *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
    *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
    */
+
   function clickCard() {
     // Only process clicks if deck not temporarily locked
     if (!lock) {
-      // Only process card click if it has not already been matched or open
+      // Only process card click if it has not already been matched and not open
       if (!this.classList.contains('match')
-        || !this.classList.contains('open')) {
+        && !this.classList.contains('open')) {
         openCard(this);
-        checkCard(this);
-      }
 
-      function openCard(card) {
-          card.classList.add('open');
-          card.classList.add('show');
       }
+    }
+
+    function openCard(card) {
+
+        card.classList.add('open');
+
+        setTimeout(function () {
+          card.classList.add('show')
+          checkCard(card);
+        }, 200);
     }
 
     function checkCard(card) {
@@ -120,7 +121,8 @@
             hideCards(card);
             alreadyOpenCard.pop();
             lock = false;
-          }).bind(this), 1000);
+          }).bind(this), 1200);
+
         }
       // No already open card, leave current card open
       } else {
@@ -131,12 +133,14 @@
     function matchedCards(card) {
 
       card.classList.remove('open');
-      card.classList.add('match');
       alreadyOpenCard[0].classList.remove('open');
+      card.classList.add('match');
       alreadyOpenCard[0].classList.add('match');
+      // Rotate icon by 180deg to compensate for rotation during open animation
+      card.firstElementChild.classList.add('rotated');
+      alreadyOpenCard[0].firstElementChild.classList.add('rotated');
       alreadyOpenCard.pop();
       matched++;
-      console.log('Matched: '+ matched);
     }
 
     function hideCards(card) {
@@ -152,13 +156,9 @@
     movesElement.textContent = ++movesNumber;
 
     //adjust star rating
-    if(getMoves() === 10) removeStar();
-    if(getMoves() === 14) removeStar();
-    if(getMoves() === 18) removeStar();
-  }
-
-  function getMoves() {
-    return movesNumber;
+    if(movesNumber === 10) removeStar();
+    if(movesNumber === 14) removeStar();
+    if(movesNumber === 18) removeStar();
   }
 
   function resetMoves() {
