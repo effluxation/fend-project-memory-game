@@ -117,6 +117,12 @@
         } else {
           // Lock deck for 1 second and show both cards
           lock = true;
+
+          // Launch mismatch animation
+          alreadyOpenCard[0].classList.add('mismatch');
+          card.classList.add('mismatch');
+
+          //Hide both cards in 1.2s
           setTimeout( (function () {
             hideCards(card);
             alreadyOpenCard.pop();
@@ -146,8 +152,10 @@
     function hideCards(card) {
       card.classList.remove('show');
       card.classList.remove('open');
+      card.classList.remove('mismatch');
       alreadyOpenCard[0].classList.remove('show');
       alreadyOpenCard[0].classList.remove('open');
+      alreadyOpenCard[0].classList.remove('mismatch');
     }
   }
 
