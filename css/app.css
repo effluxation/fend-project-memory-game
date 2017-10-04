@@ -168,6 +168,7 @@ h1 {
     padding-top: 35vh;
     transform: translateY(0);
     transition: transform .8s;
+    transition-timing-function: ease-in-out;
 }
 
 .visible {

@@ -8,7 +8,6 @@
   'bicycle','bicycle','bomb','bomb'];
 
   let alreadyOpenCard = [];
-  let gameStatus = 'default';
   let deckLock;
   let moves = 0;
   let matched = 0;
@@ -32,7 +31,6 @@
           array[currentIndex] = array[randomIndex];
           array[randomIndex] = temporaryValue;
       }
-
       return array;
   }
 
@@ -51,6 +49,7 @@
       const cardI = cardLi.firstElementChild;
       cardI.className = "";
       cardI.classList.add('fa',`fa-${cards[cardCount]}`);
+
       // Only add EventListeners on initial reset
       if (initialReset){
         cardLi.addEventListener('click', clickCard, false);
@@ -62,6 +61,7 @@
   function initialize() {
     resetDeck(true);
     unlock();
+    // Initialize button eventlisteners
     const restartButton = document.querySelector('.restart');
     restartButton.addEventListener('click', function () {
       // Subsequent resets using button will not add event listeners
@@ -116,8 +116,8 @@
         // A card has already been open
         incrementMoves();
         // Get Icons of both cards currently open
-        let cardIcon = card.firstElementChild.classList.item(1);
-        let alreadyOpenCardIcon = alreadyOpenCard[0].firstElementChild.classList.item(1);
+        const cardIcon = card.firstElementChild.classList.item(1);
+        const alreadyOpenCardIcon = alreadyOpenCard[0].firstElementChild.classList.item(1);
         // If cards Match
         if (alreadyOpenCardIcon === cardIcon) {
           matchedCards(card);
@@ -142,10 +142,9 @@
       alreadyOpenCard[0].classList.remove('open');
       card.classList.add('match');
       alreadyOpenCard[0].classList.add('match');
-      // Rotate icon by 180deg to compensate for rotation during open animation
-
       alreadyOpenCard.pop();
       matched++;
+      // Set timeout for duration of animation
       setTimeout(function () {
         unlock();
         // Check for victory condition
@@ -163,6 +162,7 @@
       // Start hide animation
       card.classList.add('close');
       alreadyOpenCard[0].classList.add('close');
+      // timeout for duration of closing animation
       setTimeout(function () {
         // Clear all classes from card
         card.classList.remove('show','open','mismatch','close');
@@ -179,8 +179,8 @@
 
     //adjust star rating
     if(moves === 11) removeStar();
-    if(moves === 15) removeStar();
-    if(moves === 20) removeStar();
+    if(moves === 16) removeStar();
+    if(moves === 22) removeStar();
   }
 
   function resetMoves() {
@@ -191,8 +191,8 @@
   }
 
   function resetStars() {
-    let starsList = document.querySelectorAll('.score-panel .stars li i');
-    let modalStarsList = document.querySelectorAll('.modal .stars li i');
+    const starsList = document.querySelectorAll('.score-panel .stars li i');
+    const modalStarsList = document.querySelectorAll('.modal .stars li i');
     for (let star of starsList) {
       star.classList.replace( 'fa-star-o', 'fa-star');
     }
@@ -202,8 +202,8 @@
   }
 
   function removeStar() {
-    let starList = document.querySelectorAll('.score-panel .stars li i');
-    let modalStarsList = document.querySelectorAll('.modal .stars li i');
+    const starList = document.querySelectorAll('.score-panel .stars li i');
+    const modalStarsList = document.querySelectorAll('.modal .stars li i');
     for (let i = 2; i >= 0; i--) {
       if (starList[i].classList.contains('fa-star')) {
         starList[i].classList.replace( 'fa-star', 'fa-star-o');
@@ -214,8 +214,8 @@
   }
 
   function victory() {
-    let modal = document.querySelector('.modal');
-    let modalMoves = document.querySelector('#movesWin');
+    const modal = document.querySelector('.modal');
+    const modalMoves = document.querySelector('#movesWin');
     modalMoves.textContent = moves;
     modal.classList.add('visible');
   }
