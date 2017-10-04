@@ -67,7 +67,7 @@
       // Subsequent resets using button will not add event listeners
       resetDeck(false);
     },false);
-    const playAgainButton = document.querySelector('.playBtn');
+    const playAgainButton = document.querySelector('.btn-play');
     playAgainButton.addEventListener('click', function () {
       // Subsequent resets using button will not add event listeners
       const modal = document.querySelector('.modal');
@@ -215,7 +215,7 @@
 
   function victory() {
     const modal = document.querySelector('.modal');
-    const modalMoves = document.querySelector('#movesWin');
+    const modalMoves = document.querySelector('.movesWin');
     modalMoves.textContent = moves;
     modal.classList.add('visible');
   }
