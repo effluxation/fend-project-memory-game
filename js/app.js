@@ -3,9 +3,13 @@
    * Create a list that holds all of your cards
    */
 
-  const cards = ['paper-plane','paper-plane','anchor','anchor','bolt','bolt',
-  'diamond','diamond','leaf','leaf','cube','cube',
-  'bicycle','bicycle','bomb','bomb'];
+  const cards = [
+    'paper-plane','paper-plane',
+    'anchor','anchor','bolt','bolt',
+    'diamond','diamond','leaf','leaf',
+    'cube','cube','bicycle','bicycle',
+    'bomb','bomb'
+  ];
 
   let alreadyOpenCard = [];
   let deckLock;
@@ -44,10 +48,10 @@
     const cardLiAll = document.querySelectorAll('.deck li');
     let cardCount = 0;
     for (let cardLi of cardLiAll){
-      cardLi.className = "";
+      cardLi.className = '';
       cardLi.classList.add('card');
       const cardI = cardLi.firstElementChild;
-      cardI.className = "";
+      cardI.className = '';
       cardI.classList.add('fa',`fa-${cards[cardCount]}`);
 
       // Only add EventListeners on initial reset
@@ -92,8 +96,7 @@
     if (!getLock()) {
       lock();
       // Only process card click if it has not already been matched and not open
-      if (!this.classList.contains('match')
-        && !this.classList.contains('open')) {
+      if (!this.classList.contains('match') && !this.classList.contains('open')) {
         openCard(this);
       } else {
         // Unlock deck since clicked on already open card
