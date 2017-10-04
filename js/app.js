@@ -9,9 +9,11 @@
 
   let alreadyOpenCard = [];
   let gameStatus = 'default';
-  let lock = false;
-  let movesNumber = 0;
+  let deckLock;
+  let moves = 0;
   let matched = 0;
+
+  initialize();
   /*
    * Display the cards on the page
    *   - shuffle the list of cards using the provided "shuffle" method below
@@ -35,37 +37,44 @@
   }
 
   function resetDeck(initialReset) {
-
     resetMoves();
     resetStars();
     shuffle(cards);
-    //
+
     // Reset classes on all cards and assign new ones reflecting
     // shuffled deck
     const cardLiAll = document.querySelectorAll('.deck li');
     let cardCount = 0;
-    resetMoves();
     for (let cardLi of cardLiAll){
       cardLi.className = "";
       cardLi.classList.add('card');
-      let cardI = cardLi.firstElementChild;
+      const cardI = cardLi.firstElementChild;
       cardI.className = "";
       cardI.classList.add('fa',`fa-${cards[cardCount]}`);
       // Only add EventListeners on initial reset
       if (initialReset){
         cardLi.addEventListener('click', clickCard, false);
-        const restartButton = document.querySelector('.restart');
-        restartButton.addEventListener('click', function () {
-          // Subsequent resets will not add event listeners
-          resetDeck(false);
-        },false);
       }
       cardCount++;
     }
   }
 
-  // Initial reset
-  resetDeck(true);
+  function initialize() {
+    resetDeck(true);
+    unlock();
+    const restartButton = document.querySelector('.restart');
+    restartButton.addEventListener('click', function () {
+      // Subsequent resets using button will not add event listeners
+      resetDeck(false);
+    },false);
+    const playAgainButton = document.querySelector('.playBtn');
+    playAgainButton.addEventListener('click', function () {
+      // Subsequent resets using button will not add event listeners
+      const modal = document.querySelector('.modal');
+      modal.classList.remove('visible');
+      resetDeck(false);
+    },false);
+  }
 
   /*
    * set up the event listener for a card. If a card is clicked:
@@ -80,30 +89,31 @@
 
   function clickCard() {
     // Only process clicks if deck not temporarily locked
-    if (!lock) {
+    if (!getLock()) {
+      lock();
       // Only process card click if it has not already been matched and not open
       if (!this.classList.contains('match')
         && !this.classList.contains('open')) {
         openCard(this);
-
+      } else {
+        // Unlock deck since clicked on already open card
+        unlock();
       }
     }
 
     function openCard(card) {
-
         card.classList.add('open');
-
+        // Set timeout for duration of opening animation
         setTimeout(function () {
-          card.classList.add('show')
+          card.classList.add('show');
           checkCard(card);
         }, 200);
     }
 
     function checkCard(card) {
-
       // If already an open card present on deck
       if (alreadyOpenCard.length){
-        // Single move completed
+        // A card has already been open
         incrementMoves();
         // Get Icons of both cards currently open
         let cardIcon = card.firstElementChild.classList.item(1);
@@ -111,24 +121,19 @@
         // If cards Match
         if (alreadyOpenCardIcon === cardIcon) {
           matchedCards(card);
-        // Cards don't match
+        // Else cards don't match
         } else {
-          // Lock deck for 1 second and show both cards
-          lock = true;
-
           // Launch mismatch animation
           misMatchedCards(card);
-
-          //Hide both cards in 1.2s
+          //Hide both cards in 1.2s to give time for player to memorize
           setTimeout(function () {
             hideCards(card);
-            lock = false;
           }, 1200);
-
         }
-      // No already open card, leave current card open
+      // No card already open, leave current card open
       } else {
         alreadyOpenCard.push(card);
+        unlock();
       }
     }
 
@@ -138,16 +143,18 @@
       card.classList.add('match');
       alreadyOpenCard[0].classList.add('match');
       // Rotate icon by 180deg to compensate for rotation during open animation
-      card.firstElementChild.classList.add('rotated');
-      alreadyOpenCard[0].firstElementChild.classList.add('rotated');
+
       alreadyOpenCard.pop();
       matched++;
+      setTimeout(function () {
+        unlock();
+        // Check for victory condition
+        if (matched === 8) victory();
+      }, 300);
+
     }
 
     function misMatchedCards(card) {
-      // Rotate icon by 180deg to compensate for rotation during open animation
-      card.firstElementChild.classList.add('rotated');
-      alreadyOpenCard[0].firstElementChild.classList.add('rotated');
       alreadyOpenCard[0].classList.add('mismatch');
       card.classList.add('mismatch');
     }
@@ -161,39 +168,46 @@
         card.classList.remove('show','open','mismatch','close');
         alreadyOpenCard[0].classList.remove('show','open','mismatch','close');
         alreadyOpenCard.pop();
+        unlock();
       }, 200);
     }
   }
 
   function incrementMoves() {
     const movesElement = document.querySelector('.moves');
-    movesElement.textContent = ++movesNumber;
+    movesElement.textContent = ++moves;
 
     //adjust star rating
-    if(movesNumber === 11) removeStar();
-    if(movesNumber === 15) removeStar();
-    if(movesNumber === 20) removeStar();
+    if(moves === 11) removeStar();
+    if(moves === 15) removeStar();
+    if(moves === 20) removeStar();
   }
 
   function resetMoves() {
-    movesNumber = 0;
+    moves = 0;
     matched = 0;
     const movesElement = document.querySelector('.moves');
-    movesElement.textContent = movesNumber;
+    movesElement.textContent = moves;
   }
 
   function resetStars() {
-    let starsList = document.querySelectorAll('.stars li i');
+    let starsList = document.querySelectorAll('.score-panel .stars li i');
+    let modalStarsList = document.querySelectorAll('.modal .stars li i');
     for (let star of starsList) {
+      star.classList.replace( 'fa-star-o', 'fa-star');
+    }
+    for (let star of modalStarsList) {
       star.classList.replace( 'fa-star-o', 'fa-star');
     }
   }
 
   function removeStar() {
-    let starList = document.querySelectorAll('.stars li i');
+    let starList = document.querySelectorAll('.score-panel .stars li i');
+    let modalStarsList = document.querySelectorAll('.modal .stars li i');
     for (let i = 2; i >= 0; i--) {
       if (starList[i].classList.contains('fa-star')) {
         starList[i].classList.replace( 'fa-star', 'fa-star-o');
+        modalStarsList[i].classList.replace( 'fa-star', 'fa-star-o');
         break;
       }
     }
@@ -201,6 +215,20 @@
 
   function victory() {
     let modal = document.querySelector('.modal');
-    //resetDeck(false);
+    let modalMoves = document.querySelector('#movesWin');
+    modalMoves.textContent = moves;
+    modal.classList.add('visible');
+  }
+
+  function lock() {
+    deckLock = true;
+  }
+
+  function unlock() {
+    deckLock = false;
+  }
+
+  function getLock() {
+    return deckLock;
   }
 })();
