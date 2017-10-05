@@ -80,17 +80,7 @@
     },false);
   }
 
-  /*
-   * set up the event listener for a card. If a card is clicked:
-   *  - display the card's symbol (put this functionality in another function that you call from this one)
-   *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
-   *  - if the list already has another card, check to see if the two cards match
-   *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
-   *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
-   *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
-   *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
-   */
-
+  // Card Event Listener callback
   function clickCard() {
     // Only process clicks if deck not temporarily locked
     if (!getLock()) {
@@ -103,77 +93,77 @@
         unlock();
       }
     }
+  }
 
-    function openCard(card) {
-        card.classList.add('open');
-        // Set timeout for duration of opening animation
-        setTimeout(function () {
-          card.classList.add('show');
-          checkCard(card);
-        }, 200);
-    }
-
-    function checkCard(card) {
-      // If already an open card present on deck
-      if (alreadyOpenCard.length){
-        // A card has already been open
-        incrementMoves();
-        // Get Icons of both cards currently open
-        const cardIcon = card.firstElementChild.classList.item(1);
-        const alreadyOpenCardIcon = alreadyOpenCard[0].firstElementChild.classList.item(1);
-        // If cards Match
-        if (alreadyOpenCardIcon === cardIcon) {
-          matchedCards(card);
-        // Else cards don't match
-        } else {
-          // Launch mismatch animation
-          misMatchedCards(card);
-          //Hide both cards in 1.2s to give time for player to memorize
-          setTimeout(function () {
-            hideCards(card);
-          }, 1200);
-        }
-      // No card already open, leave current card open
-      } else {
-        alreadyOpenCard.push(card);
-        unlock();
-      }
-    }
-
-    function matchedCards(card) {
-      card.classList.remove('open');
-      alreadyOpenCard[0].classList.remove('open');
-      card.classList.add('match');
-      alreadyOpenCard[0].classList.add('match');
-      alreadyOpenCard.pop();
-      matched++;
-      // Set timeout for duration of animation
+  function openCard(card) {
+      card.classList.add('open');
+      // Set timeout for duration of opening animation
       setTimeout(function () {
-        unlock();
-        // Check for victory condition
-        if (matched === 8) victory();
-      }, 300);
-
-    }
-
-    function misMatchedCards(card) {
-      alreadyOpenCard[0].classList.add('mismatch');
-      card.classList.add('mismatch');
-    }
-
-    function hideCards(card) {
-      // Start hide animation
-      card.classList.add('close');
-      alreadyOpenCard[0].classList.add('close');
-      // timeout for duration of closing animation
-      setTimeout(function () {
-        // Clear all classes from card
-        card.classList.remove('show','open','mismatch','close');
-        alreadyOpenCard[0].classList.remove('show','open','mismatch','close');
-        alreadyOpenCard.pop();
-        unlock();
+        card.classList.add('show');
+        checkCard(card);
       }, 200);
+  }
+
+  function checkCard(card) {
+    // If already an open card present on deck
+    if (alreadyOpenCard.length){
+      // A card has already been open
+      incrementMoves();
+      // Get Icons of both cards currently open
+      const cardIcon = card.firstElementChild.classList.item(1);
+      const alreadyOpenCardIcon = alreadyOpenCard[0].firstElementChild.classList.item(1);
+      // If cards Match
+      if (alreadyOpenCardIcon === cardIcon) {
+        matchedCards(card);
+      // Else cards don't match
+      } else {
+        // Launch mismatch animation
+        misMatchedCards(card);
+        //Hide both cards in 1.2s to give time for player to memorize
+        setTimeout(function () {
+          hideCards(card);
+        }, 1200);
+      }
+    // No card already open, leave current card open
+    } else {
+      alreadyOpenCard.push(card);
+      unlock();
     }
+  }
+
+  function matchedCards(card) {
+    card.classList.remove('open');
+    alreadyOpenCard[0].classList.remove('open');
+    card.classList.add('match');
+    alreadyOpenCard[0].classList.add('match');
+    alreadyOpenCard.pop();
+    matched++;
+    // Set timeout for duration of animation
+    setTimeout(function () {
+      unlock();
+      // Check for victory condition
+      if (matched === 8) victory();
+    }, 300);
+
+  }
+
+  function misMatchedCards(card) {
+    alreadyOpenCard[0].classList.add('mismatch');
+    card.classList.add('mismatch');
+  }
+
+  function hideCards(card) {
+    // Start hide animation
+    card.classList.add('close');
+    alreadyOpenCard[0].classList.add('close');
+    // timeout for duration of closing animation
+    setTimeout(function () {
+      // Clear all classes from card
+      card.classList.remove('show','open','mismatch','close');
+      alreadyOpenCard[0].classList.remove('show','open','mismatch','close');
+      alreadyOpenCard.pop();
+      unlock();
+    }, 200);
   }
 
   function incrementMoves() {
@@ -181,9 +171,8 @@
     movesElement.textContent = ++moves;
 
     //adjust star rating
-    if(moves === 11) removeStar();
-    if(moves === 16) removeStar();
-    if(moves === 22) removeStar();
+    if(moves === 12) removeStar();
+    if(moves === 18) removeStar();
   }
 
   function resetMoves() {
@@ -207,7 +196,7 @@
   function removeStar() {
     const starList = document.querySelectorAll('.score-panel .stars li i');
     const modalStarsList = document.querySelectorAll('.modal .stars li i');
-    for (let i = 2; i >= 0; i--) {
+    for (let i = 2; i >= 1; i--) {
       if (starList[i].classList.contains('fa-star')) {
         starList[i].classList.replace( 'fa-star', 'fa-star-o');
         modalStarsList[i].classList.replace( 'fa-star', 'fa-star-o');
