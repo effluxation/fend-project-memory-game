@@ -15,14 +15,9 @@
   let deckLock;
   let moves = 0;
   let matched = 0;
+  let timeStart;
 
   initialize();
-  /*
-   * Display the cards on the page
-   *   - shuffle the list of cards using the provided "shuffle" method below
-   *   - loop through each card and create its HTML
-   *   - add each card's HTML to the page
-   */
 
   // Shuffle function from http://stackoverflow.com/a/2450976
   function shuffle(array) {
@@ -42,7 +37,7 @@
     resetMoves();
     resetStars();
     shuffle(cards);
-
+    restartTimer();
     // Reset classes on all cards and assign new ones reflecting
     // shuffled deck
     const cardLiAll = document.querySelectorAll('.deck li');
@@ -208,8 +203,31 @@
   function victory() {
     const modal = document.querySelector('.modal');
     const modalMoves = document.querySelector('.movesWin');
+    const modalTimer = document.querySelector('.timer');
     modalMoves.textContent = moves;
+    const now = Date.now() - timeStart;
+    modalTimer.textContent = readableTime(now);
     modal.classList.add('visible');
+  }
+
+  // Millisecond to readable time conversion function adapted from
+  // https://stackoverflow.com/questions/19700283/how-to-convert-time-milliseconds-to-hours-min-sec-format-in-javascript
+  function readableTime(millisec) {
+    let seconds = (millisec / 1000).toFixed(0);
+    let minutes = Math.floor(seconds / 60);
+    let hours = "";
+    if (minutes > 59) {
+        hours = Math.floor(minutes / 60);
+        hours = (hours >= 10) ? hours : "0" + hours;
+        minutes = minutes - (hours * 60);
+    }
+    minutes = (minutes >= 10) ? minutes : "0" + minutes;
+    seconds = Math.floor(seconds % 60);
+    seconds = (seconds >= 10) ? seconds : "0" + seconds;
+    if (hours != "") {
+        return hours + ":" + minutes + ":" + seconds;
+    }
+    return minutes + ":" + seconds;
   }
 
   function lock() {
@@ -222,5 +240,9 @@
 
   function getLock() {
     return deckLock;
+  }
+
+  function restartTimer() {
+    timeStart = Date.now();
   }
 })();

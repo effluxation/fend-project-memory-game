@@ -64,7 +64,6 @@ h1 {
     justify-content: center;
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
-
 }
 
 .deck .open {
@@ -101,7 +100,6 @@ h1 {
     animation-fill-mode: both;
     animation-timing-function: ease-in;
     animation-duration: 0.75s;
-
 }
 
 .deck .close {
