@@ -1,20 +1,18 @@
-# Memory Game Project
+Memory Game Project
+===============================
 
-## Table of Contents
+## Instructions for launching the game
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+1. Clone this repo or download and unzip so that you have the directory fend-project-memory-game on your computer at the location of your choice.
 
-## Instructions
+2. Open index.html in your browser.
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+## Instructions for playing the game
 
-To get started, open `js/app.js` and start building out the app's functionality
+1. Use mouse clicks or touchscreen taps to uncover pairs of cards.
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+2. Your goal is to uncover all of the cards on playing board. Cards can only be uncovered in pairs: if the icons of the two cards match, the cards will remain uncovered, if not, they both return to the covered state.
 
-## Contributing
+3. By memorizing locations of specific icons on the board you will be able to, with a bit of luck, to win the game using as few moves as possible.
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+Good luck
